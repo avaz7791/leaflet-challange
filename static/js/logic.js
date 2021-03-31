@@ -2,7 +2,13 @@
 Initialize Global Variables
 */
 var url_usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
-
+    // Create the map object with options Los Angeles, CA
+var Map = L.map("mapid", {
+      center: [34.0522, 118.2437],
+      zoom: 12
+      //,layers: [lightmap, quakes]
+});
+  
 function createMap(quakes) {
 
     // Create the tile layer that will be the background of our map
@@ -20,21 +26,16 @@ function createMap(quakes) {
   
     // Create an overlayMaps object to hold the quakes layer
     var overlayMaps = {
-      "Bike Stations": quakes
+      "Quates": quakes
     };
   
-    // Create the map object with options Los Angeles, CA
-    var Map = L.map("mapid", {
-      center: [34.0522, 118.2437],
-      zoom: 12,
-      layers: [lightmap, quakes]
-    });
-  
+
     // Create a layer control, pass in the baseMaps and overlayMaps. Add the layer control to the map
     L.control.layers(baseMaps, overlayMaps, {
       collapsed: false
     }).addTo(Map);
   }
+
 
 function createQuakeSpots(response) {
       console.log(response);
@@ -43,20 +44,21 @@ function createQuakeSpots(response) {
     var qSpots = response.features;
   
     // Loop through the quakes array
+    var QuakeSpots=[];
     for (var index = 0; index < qSpots.length; index++) {
       var qSpot = qSpots[index].geometry.coordinates;
       //console.log(qSpot);
-
+      QuakeSpots.push(qSpot);
       var qMagnitude = qSpots[index].properties.mag;
       var qPlace = qSpots[index].properties.place;
       var qId = qSpots[index].properties.ids;
   
       L.circle(qSpot, {
-          color:"white",
+          color:"red",
           fillcolor: "#FF0000",
           radius: qMagnitude * 1000
 
-      }).bindPopup(`<center><h1> ${qMagnitude} Quake Magnitud</h1></center>
+      }).bindPopup(`<h1> ${qMagnitude} Quake Magnitud</h1>
       <ul>
         <li>Place: ${qPlace}</li>
         <li>Coordinates: ${qSpot}</li>
@@ -67,7 +69,8 @@ function createQuakeSpots(response) {
   
     }
   
-    createMap(L.layerGroup(qSpots));
+    createMap(L.layerGroup(QuakeSpots));
+    console.log(QuakeSpots);
   }
 
   
