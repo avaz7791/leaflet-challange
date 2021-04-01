@@ -32,38 +32,30 @@ d3.json(url_usgs, function (response) {
     // Loop through the quakes array
     var QuakeSpots=[];
     for (var index = 0; index < qSpots.length; index++) {
-      var qSpot = qSpots[index].geometry.coordinates;
+     // var qSpot = qSpots[index].geometry.coordinates;
       var qSpotLon = qSpots[index].geometry.coordinates[1];
-      var qSpotLat = qSpots[index].geometry.coordinates[0]*-1;
+      var qSpotLat = qSpots[index].geometry.coordinates[0];
       
       var coordinates = L.latLng(qSpotLon, qSpotLat);
       var qDepth = qSpots[index].geometry.coordinates[2];
-      console.log(coordinates);
+     // console.log(coordinates);
       
-     // console.log(qDepth);
-//      QuakeSpots.push(qSpot);
+      // console.log(qDepth);
+      
       var qMagnitude = qSpots[index].properties.mag;
       var qPlace = qSpots[index].properties.place;
       var qId = qSpots[index].properties.ids;
   
-      // L.circle(qSpot, {
-      //     color: magnitudColor(qMagnitude),
-      //     fillcolor: "#FF0000",
-      //     radius: magnitudSize(qMagnitude)
 
-      // }).bindPopup(`<h1> ${qMagnitude} Quake Magnitude</h1>
-      // <ul>
-      //   <li>Place: ${qPlace}</li>
-      //   <li>Coordinates: ${qSpot}</li>
-      //   <li>ID: ${qId}</li>
-      // </ul>`
-      // ).addTo(quakesLayer);
-      // quakesLayer.addTo(xMap);
 
       L.circleMarker(coordinates, {
         color: magnitudColor(qDepth),
-        fillcolor: "#FF0000",
+        fillcolor: "grey",
+        stroke: true,
+        weight:1,
         radius: magnitudSize(qMagnitude)
+
+
         
       }).bindPopup(`<h1> ${qMagnitude} Quake Magnitude</h1>
       <ul>
@@ -79,15 +71,17 @@ d3.json(url_usgs, function (response) {
   //Map
     
   // create legend
-    var legendPosition = L.control({position:'upperright'});
+    var legendPosition = L.control({position:'bottomleft'});
     legendPosition.onAdd = function(xMap) {
-      var div = L.DomUtil.create ("div","info legend");
+      var div = L.DomUtil.create("div","info legend");
 
-      var scale = [1,2,3,4,5];
-      var color = ["grey","yellow","blue","green","red" ]
+      var scale = [20,30,40,50,60,70,85]; //Depth scale 
+      var color = ["grey","yellow","blue","green","red" ] //depth color
 
-    }
-
+      return div;
+      console.log(div);
+    };
+      legendPosition.addTo(xMap);
   }
 
   //d3.json(url_usgs, function (response){     console.log(response);  })
@@ -126,25 +120,25 @@ function magnitudColor(depth){
       color = "red";
   }
   else if (depth > 70){
-      color = "orange";
+      color = "lightpink";
   }
   else if (depth > 60){
-    color = "yellow";
+    color = "orange";
   }
   else if (depth > 50){
-    color = "lightyellow";
+    color = "yellow";
   }
   else if (depth > 40){
-    color = "green";
+    color = "lightyellow";
   }
   else if (depth > 30){
-    color = "lightgreen";
+    color = "green";
   }
   else if (depth > 20){
-    color = "lightgrey";
+    color = "purple";
   }
   else {
-    color = "grey";  }
+    color = "lightgreen";  }
   return color;
 };
 
