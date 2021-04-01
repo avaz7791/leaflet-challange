@@ -3,8 +3,9 @@ Amir Vazquez
 Initialize Global Variables
 */
 // URL
-//var url_usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson" //More data
-var url_usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson" //less data
+var url_usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson" //More data
+
+//var url_usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson" //less data
 
 // Create lakers for Map and Quakes
 var quakesLayer = L.layerGroup();
@@ -39,9 +40,9 @@ d3.json(url_usgs, function (response) {
       var qId = qSpots[index].properties.ids;
   
       L.circle(qSpot, {
-          color:"red",
+          color: magnitudColor(qMagnitude),
           fillcolor: "#FF0000",
-          radius: qMagnitude * 1000
+          radius: magnitudSize(qMagnitude)
 
       }).bindPopup(`<h1> ${qMagnitude} Quake Magnitud</h1>
       <ul>
@@ -61,3 +62,45 @@ d3.json(url_usgs, function (response) {
   //d3.json(url_usgs, function (response){     console.log(response);  })
 
 );
+
+function magnitudSize(magnitude){
+    var radius = 0;
+    var color = "white";
+    if (magnitude > 5.1) {
+        radius = magnitude * 51000;  
+    }
+    else if (magnitude > 4.0){
+        radius = magnitude * 40000;  
+    }
+    else if (magnitude > 3.0){
+      radius = magnitude * 30000;  
+    }
+    else if (magnitude > 2.0){
+      radius = magnitude * 20000;  
+    }
+    else {
+      radius = magnitude * 10000;  
+    }
+    return radius;
+};
+function magnitudColor(magnitude){
+  var radius = 0;
+  var color = "white";
+  if (magnitude > 5.1) {
+      color = "red";
+  }
+  else if (magnitude > 4.0){
+      color = "green";
+  }
+  else if (magnitude > 3.0){
+    color = "blue";
+  }
+  else if (magnitude > 2.0){
+    color = "beige";
+  }
+  else {
+    color = "white";  }
+  return color;
+};
+
+
