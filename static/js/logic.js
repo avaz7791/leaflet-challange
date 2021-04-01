@@ -24,7 +24,7 @@ var xMap = L.map("mapid", {
 });
 
 d3.json(url_usgs, function (response) {
-     // console.log(response);
+    console.log(response);
 
     // Pull Quate Spots from Features of our data pull 
     var qSpots = response.features;
@@ -33,9 +33,14 @@ d3.json(url_usgs, function (response) {
     var QuakeSpots=[];
     for (var index = 0; index < qSpots.length; index++) {
       var qSpot = qSpots[index].geometry.coordinates;
+      var qSpotLon = qSpots[index].geometry.coordinates[1];
+      var qSpotLat = qSpots[index].geometry.coordinates[0]*-1;
+      
+      var coordinates = L.latLng(qSpotLon, qSpotLat);
       var qDepth = qSpots[index].geometry.coordinates[2];
-
-      console.log(qDepth);
+      console.log(coordinates);
+      
+     // console.log(qDepth);
 //      QuakeSpots.push(qSpot);
       var qMagnitude = qSpots[index].properties.mag;
       var qPlace = qSpots[index].properties.place;
@@ -55,15 +60,16 @@ d3.json(url_usgs, function (response) {
       // ).addTo(quakesLayer);
       // quakesLayer.addTo(xMap);
 
-      L.circleMarker(qSpot, {
+      L.circleMarker(coordinates, {
         color: magnitudColor(qDepth),
         fillcolor: "#FF0000",
         radius: magnitudSize(qMagnitude)
         
       }).bindPopup(`<h1> ${qMagnitude} Quake Magnitude</h1>
       <ul>
+        <li>Depth: ${qDepth}</li>
         <li>Place: ${qPlace}</li>
-        <li>Coordinates: ${qSpot}</li>
+        <li>Coordinates: ${coordinates}</li>
         <li>ID: ${qId}</li>
       </ul>`
       ).addTo(quakesLayer);
@@ -82,7 +88,6 @@ d3.json(url_usgs, function (response) {
 
     }
 
-    console.log(response);
   }
 
   //d3.json(url_usgs, function (response){     console.log(response);  })
