@@ -1,8 +1,11 @@
 /*
+Amir Vazquez 
 Initialize Global Variables
 */
 // URL
-var url_usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
+//var url_usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson" //More data
+var url_usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson" //less data
+
 // Create lakers for Map and Quakes
 var quakesLayer = L.layerGroup();
 var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -13,13 +16,13 @@ var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{
 });
 
 // Create the map object with options Los Angeles, CA
-var Map = L.map("mapid", {
+var xMap = L.map("mapid", {
   center: [34.0522, 118.2437],
   zoom: 5,
   layers: [lightmap, quakesLayer]
 });
 
-function createQuakeSpots(response) {
+d3.json(url_usgs, function (response) {
      // console.log(response);
 
     // Pull Quate Spots from Features of our data pull 
@@ -48,13 +51,13 @@ function createQuakeSpots(response) {
       </ul>`
 
       ).addTo(quakesLayer);
-      quakesLayer.addTo(Map);
+      quakesLayer.addTo(xMap);
     }
-  
-//    createMap(L.layerGroup(QuakeSpots));
+  //Map
+    
     console.log(QuakeSpots);
   }
 
   //d3.json(url_usgs, function (response){     console.log(response);  })
 
-  d3.json(url_usgs,createQuakeSpots);
+);
