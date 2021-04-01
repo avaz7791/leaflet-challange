@@ -12,7 +12,7 @@ The USGS is interested in building a new set of tools that will allow them visua
 
 ### Level 1: Basic Visualization
 
-![image1](Images/image1.png)
+![image1](Images/7-Image1.png)
 
 Your first task is to visualize an earthquake data set.
 
