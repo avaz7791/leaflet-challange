@@ -46,13 +46,11 @@ d3.json(url_usgs, function (response) {
       var qPlace = qSpots[index].properties.place;
       var qId = qSpots[index].properties.ids;
   
-
-
       L.circleMarker(coordinates, {
         color: magnitudColor(qDepth),
         fillcolor: "grey",
         stroke: true,
-        weight:1,
+        weight:0.9,  //0-2
         radius: magnitudSize(qMagnitude)
 
 
@@ -73,18 +71,22 @@ d3.json(url_usgs, function (response) {
   // create legend
     var legendPosition = L.control({position:'bottomleft'});
     legendPosition.onAdd = function(xMap) {
-      var div = L.DomUtil.create("div","info legend");
+      //create div to insert Legend section
+      var div = L.DomUtil.create("div","Legend");
 
-      var scale = [20,30,40,50,60,70,85]; //Depth scale 
+      var scale = [0,20,30,40,50,60,70,85]; //Depth scale 
       var color = ["grey","yellow","blue","green","red" ] //depth color
+
+      div.innerHTML ="<h2>Depth Scale </h2>"
+      for  (var l=0; l< scale.length; l++) {
+            div.innerHTML += scale[l] + (scale[l + 1]? '&ndash;' + scale[l + 1] + '<br>' : '+');
+      }
 
       return div;
       console.log(div);
     };
       legendPosition.addTo(xMap);
   }
-
-  //d3.json(url_usgs, function (response){     console.log(response);  })
 
 );
 
