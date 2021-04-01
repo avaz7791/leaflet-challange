@@ -33,7 +33,9 @@ d3.json(url_usgs, function (response) {
     var QuakeSpots=[];
     for (var index = 0; index < qSpots.length; index++) {
       var qSpot = qSpots[index].geometry.coordinates;
-      //console.log(qSpot);
+      var qDepth = qSpots[index].geometry.coordinates[2];
+
+      console.log(qDepth);
 //      QuakeSpots.push(qSpot);
       var qMagnitude = qSpots[index].properties.mag;
       var qPlace = qSpots[index].properties.place;
@@ -54,7 +56,7 @@ d3.json(url_usgs, function (response) {
       // quakesLayer.addTo(xMap);
 
       L.circleMarker(qSpot, {
-        color: magnitudColor(qMagnitude),
+        color: magnitudColor(qDepth),
         fillcolor: "#FF0000",
         radius: magnitudSize(qMagnitude)
         
@@ -72,7 +74,13 @@ d3.json(url_usgs, function (response) {
     
   // create legend
     var legendPosition = L.control({position:'upperright'});
-    legendPosition.onAdd = funct
+    legendPosition.onAdd = function(xMap) {
+      var div = L.DomUtil.create ("div","info legend");
+
+      var scale = [1,2,3,4,5];
+      var color = ["grey","yellow","blue","green","red" ]
+
+    }
 
     console.log(response);
   }
@@ -106,20 +114,29 @@ function magnitudSize(magnitude){
     }
     return radius ;
 };
-function magnitudColor(magnitude){
+function magnitudColor(depth){
   var radius = 0;
   var color = "white";
-  if (magnitude > 5.1) {
+  if (depth > 85) {
       color = "red";
   }
-  else if (magnitude > 4.0){
-      color = "green";
+  else if (depth > 70){
+      color = "orange";
   }
-  else if (magnitude > 3.0){
-    color = "blue";
-  }
-  else if (magnitude > 2.0){
+  else if (depth > 60){
     color = "yellow";
+  }
+  else if (depth > 50){
+    color = "lightyellow";
+  }
+  else if (depth > 40){
+    color = "green";
+  }
+  else if (depth > 30){
+    color = "lightgreen";
+  }
+  else if (depth > 20){
+    color = "lightgrey";
   }
   else {
     color = "grey";  }
