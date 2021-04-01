@@ -4,7 +4,6 @@ Initialize Global Variables
 */
 // URL
 var url_usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson" //More data
-
 //var url_usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson" //less data
 
 // Create lakers for Map and Quakes
@@ -18,8 +17,9 @@ var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{
 
 // Create the map object with options Los Angeles, CA
 var xMap = L.map("mapid", {
-  center: [34.0522, 118.2437],
-  zoom: 5,
+  //center: [0, 0],
+  center:[37.0, -100.0],
+  zoom: 3,
   layers: [lightmap, quakesLayer]
 });
 
@@ -34,29 +34,47 @@ d3.json(url_usgs, function (response) {
     for (var index = 0; index < qSpots.length; index++) {
       var qSpot = qSpots[index].geometry.coordinates;
       //console.log(qSpot);
-      QuakeSpots.push(qSpot);
+//      QuakeSpots.push(qSpot);
       var qMagnitude = qSpots[index].properties.mag;
       var qPlace = qSpots[index].properties.place;
       var qId = qSpots[index].properties.ids;
   
-      L.circle(qSpot, {
-          color: magnitudColor(qMagnitude),
-          fillcolor: "#FF0000",
-          radius: magnitudSize(qMagnitude)
+      // L.circle(qSpot, {
+      //     color: magnitudColor(qMagnitude),
+      //     fillcolor: "#FF0000",
+      //     radius: magnitudSize(qMagnitude)
 
-      }).bindPopup(`<h1> ${qMagnitude} Quake Magnitud</h1>
+      // }).bindPopup(`<h1> ${qMagnitude} Quake Magnitude</h1>
+      // <ul>
+      //   <li>Place: ${qPlace}</li>
+      //   <li>Coordinates: ${qSpot}</li>
+      //   <li>ID: ${qId}</li>
+      // </ul>`
+      // ).addTo(quakesLayer);
+      // quakesLayer.addTo(xMap);
+
+      L.circleMarker(qSpot, {
+        color: magnitudColor(qMagnitude),
+        fillcolor: "#FF0000",
+        radius: magnitudSize(qMagnitude)
+        
+      }).bindPopup(`<h1> ${qMagnitude} Quake Magnitude</h1>
       <ul>
         <li>Place: ${qPlace}</li>
         <li>Coordinates: ${qSpot}</li>
         <li>ID: ${qId}</li>
       </ul>`
-
       ).addTo(quakesLayer);
       quakesLayer.addTo(xMap);
+
     }
   //Map
     
-    console.log(QuakeSpots);
+  // create legend
+    var legendPosition = L.control({position:'upperright'});
+    legendPosition.onAdd = funct
+
+    console.log(response);
   }
 
   //d3.json(url_usgs, function (response){     console.log(response);  })
@@ -67,21 +85,26 @@ function magnitudSize(magnitude){
     var radius = 0;
     var color = "white";
     if (magnitude > 5.1) {
-        radius = magnitude * 51000;  
+      // radius = magnitude * 51000;  
+        radius = magnitude * 8 ;
     }
     else if (magnitude > 4.0){
-        radius = magnitude * 40000;  
+       // radius = magnitude * 40000;  
+        radius = magnitude * 7;  
     }
     else if (magnitude > 3.0){
-      radius = magnitude * 30000;  
+      //radius = magnitude * 30000;  
+      radius = magnitude * 6 ;
     }
     else if (magnitude > 2.0){
-      radius = magnitude * 20000;  
+      //radius = magnitude * 20000;  
+      radius = magnitude * 5;
     }
     else {
-      radius = magnitude * 10000;  
+      //radius = magnitude * 1000000;  
+      radius = magnitude * 3;
     }
-    return radius;
+    return radius ;
 };
 function magnitudColor(magnitude){
   var radius = 0;
@@ -96,10 +119,10 @@ function magnitudColor(magnitude){
     color = "blue";
   }
   else if (magnitude > 2.0){
-    color = "beige";
+    color = "yellow";
   }
   else {
-    color = "white";  }
+    color = "grey";  }
   return color;
 };
 
